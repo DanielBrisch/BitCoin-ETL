@@ -1,95 +1,97 @@
-# ETL Bitcoin
+# Bitcoin ETL
 
-Este projeto implementa um pipeline ETL (Extração, Transformação e Carga) que consulta a API pública da Coinbase a cada 15 segundos, trata os dados de preço do Bitcoin e persiste as informações em um banco de dados PostgreSQL.
+This project implements an ETL (Extract, Transform, Load) pipeline that polls the public Coinbase API every 15 seconds, processes Bitcoin price data, and persists the information to a PostgreSQL database.
 
 ---
 
-## 🗂️ Estrutura de Diretórios
+## 🗂️ Directory Structure
 
 ```
 ├── cmd
-│   └── main.go            # Ponto de entrada da aplicação
+│   └── main.go            # Application entry point
 │
-├── internal/database      # Implementação de acesso a dados
-│   ├── db.go              # Funções de conexão e migração do banco
-│   ├── logger.go          # Lógica de gravação de logs no banco
-│   └── repository.go      # Camada de persistência para entidades
+├── internal/database      # Data access implementation
+│   ├── db.go              # Database connection and migration functions
+│   ├── logger.go          # Logic for writing logs to the database
+│   └── repository.go      # Persistence layer for entities
 │
 ├── pkg
 │   ├── http
-│   │   └── client.go      # Cliente HTTP para consumo da API Coinbase
+│   │   └── client.go      # HTTP client for consuming the Coinbase API
 │   ├── models
-│   │   ├── coin_price.go  # Modelo para preço de criptomoeda
-│   │   └── log_event.go   # Modelo para registro de logs
+│   │   ├── coin_price.go  # Model for cryptocurrency price
+│   │   └── log_event.go   # Model for log entries
 │   └── services
-│       └── etl.go         # Lógica da pipeline ETL (extrair, transformar, carregar)
+│       └── etl.go         # ETL pipeline logic (extract, transform, load)
 │
-├── .env                   # Variáveis de ambiente (não comitar no repositório)
-├── .gitignore             # Arquivos e pastas ignorados pelo Git
-├── Dockerfile             # Imagem Docker para containerização
-├── go.mod                 # Módulo Go e dependências
-└── go.sum                 # Checksums das dependências
+├── .env                   # Environment variables (do not commit)
+├── .gitignore             # Files and folders ignored by Git
+├── Dockerfile             # Docker image configuration
+├── go.mod                 # Go module and dependencies
+└── go.sum                 # Dependency checksums
 ```
 
 ---
 
-## 🚀 Tecnologias
+## 🚀 Technologies
 
 - [Go](https://golang.org/) 1.20+
-- [GORM](https://gorm.io/) (ORM para Go)
+- [GORM](https://gorm.io/) (ORM for Go)
 - [PostgreSQL](https://www.postgresql.org/)
-- [godotenv](https://github.com/joho/godotenv) para carregamento de variáveis de ambiente
-- Docker (opcional) para containerização
+- [godotenv](https://github.com/joho/godotenv) for loading environment variables
+- Docker (optional) for containerization
 
 ---
 
-## ⚙️ Configuração
+## ⚙️ Configuration
 
-1. **Clone o repositório**
+1. **Clone the repository**  
    ```bash
    git clone https://github.com/DanielBrisch/BitCoin-ETL.git
    cd BitCoin-ETL
    ```
 
-2. **Arquivo `.env`**
-   Crie um arquivo `.env` na raiz com as seguintes variáveis:
+2. **`.env` file**  
+   Create a `.env` file in the project root with the following variables:  
    ```dotenv
-   DB_USER=seu_usuario
-   DB_PASSWORD=sua_senha
+   DB_USER=your_username
+   DB_PASSWORD=your_password
    DB_HOST=localhost
    DB_PORT=5432
    DB_NAME=etl_bitcoin
    ```
 
-3. **Inicialize o módulo e instale dependências**
+3. **Initialize the module and install dependencies**  
    ```bash
    go mod download
    ```
 
 ---
 
-## 🏃‍♂️ Execução
+## 🏃‍♂️ Running
 
 ### Local
 
-Para rodar localmente:
+To run the application locally:
 
 ```bash
 go run cmd/main.go
 ```
 
-A cada 15 segundos, o programa:
-1. Extrai o preço do Bitcoin na API da Coinbase.
-2. Transforma o payload em estrutura `CoinPrice`.
-3. Persiste o registro em `coin_prices` no PostgreSQL.
-4. Registra eventos de log na tabela `logs`.
+Every 15 seconds the program will:
+1. Extract the current Bitcoin price from the Coinbase API.  
+2. Transform the payload into the `CoinPrice` structure.  
+3. Persist the record into the `coin_prices` table in PostgreSQL.  
+4. Log events to the `logs` table.
 
-## 🔄 Estrutura de Banco de Dados
+---
+
+## 🔄 Database Schema
 
 - **coin_prices**
   - `id` (serial, PK)
   - `value` (float)
-  - `cripto` (varchar)
+  - `crypto` (varchar)
   - `coin` (varchar)
   - `timestamp` (timestamp)
 
@@ -101,7 +103,7 @@ A cada 15 segundos, o programa:
 
 ---
 
-## 📄 Licença
+## 📄 License
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
 
